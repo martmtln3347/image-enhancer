@@ -1,0 +1,5 @@
+node_modules
+dist
+# Copiés automatiquement depuis node_modules au build
+public/models
+public/tfjs-wasm

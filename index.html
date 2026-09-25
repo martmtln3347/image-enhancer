@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Agrandis et rends plus nettes tes photos avec une IA qui tourne dans ton navigateur." />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Image Enhancer</title>
+  </head>
+  <body>
+    <main class="page">
+      <header class="intro">
+        <h1 class="intro__title">Image Enhancer</h1>
+        <p class="intro__lead">
+          Dépose une photo floue ou pixelisée, une IA l'agrandit et redessine les détails.
+          Tout se passe sur ton appareil, rien n'est envoyé sur un serveur.
+        </p>
+      </header>
+
+      <!-- Zone de dépôt -->
+      <section class="frame" id="dropzone" aria-labelledby="drop-title">
+        <span class="frame__mark frame__mark--tl" aria-hidden="true"></span>
+        <span class="frame__mark frame__mark--tr" aria-hidden="true"></span>
+        <span class="frame__mark frame__mark--bl" aria-hidden="true"></span>
+        <span class="frame__mark frame__mark--br" aria-hidden="true"></span>
+
+        <div class="frame__empty" id="empty-state">
+          <p class="frame__title" id="drop-title">Glisse une photo ici</p>
+          <p class="frame__hint">ou colle-la avec Ctrl+V. JPG, PNG ou WebP, 20 Mo max.</p>
+          <label class="button button--primary">
+            <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" hidden />
+            Choisir une photo
+          </label>
+        </div>
+
+        <img class="frame__preview" id="preview" alt="Photo choisie" hidden />
+      </section>
+
+      <p class="message" id="message" role="status" aria-live="polite"></p>
+
+      <!-- Réglages -->
+      <section class="controls" id="controls" hidden>
+        <fieldset class="choice">
+          <legend>Agrandissement</legend>
+          <label><input type="radio" name="scale" value="2" checked /><span>×2</span></label>
+          <label><input type="radio" name="scale" value="4" /><span>×4</span></label>
+        </fieldset>
+
+        <fieldset class="choice">
+          <legend>Modèle</legend>
+          <label><input type="radio" name="quality" value="slim" /><span>Rapide</span></label>
+          <label><input type="radio" name="quality" value="medium" checked /><span>Détaillé</span></label>
+        </fieldset>
+
+        <div class="controls__actions">
+          <button type="button" class="button button--primary" id="run-btn">Améliorer la photo</button>
+          <button type="button" class="button button--ghost" id="reset-btn">Changer de photo</button>
+        </div>
+
+        <div class="progress" id="progress" hidden>
+          <div class="progress__bar"><span id="progress-fill"></span></div>
+          <p class="progress__label" id="progress-label">Chargement du modèle…</p>
+        </div>
+      </section>
+
+      <!-- Résultat -->
+      <section class="result" id="result" hidden aria-labelledby="result-title">
+        <h2 class="result__title" id="result-title">Avant, après</h2>
+        <div class="compare" id="compare">
+          <img class="compare__after" id="after-img" alt="Photo améliorée" />
+          <div class="compare__before"><img id="before-img" alt="Photo d'origine" /></div>
+          <input class="compare__range" type="range" min="0" max="100" value="50"
+                 aria-label="Glisse pour comparer avant et après" />
+        </div>
+        <div class="result__footer">
+          <p class="result__meta">
+            <span id="result-size"></span><br />
+            <span class="result__method" id="result-method"></span>
+          </p>
+          <button type="button" class="button button--primary" id="download-btn">Télécharger en PNG</button>
+        </div>
+      </section>
+
+      <footer class="footnote">
+        L'IA invente des détails plausibles, elle ne retrouve pas les vrais.
+        Sur les visages et les textes, le rendu peut être un peu lissé.
+      </footer>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

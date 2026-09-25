@@ -1,0 +1,27 @@
+{
+  "name": "image-enhancer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Image Enhancer : upscaler photo par IA, 100% dans le navigateur",
+  "scripts": {
+    "copy-assets": "node scripts/copy-assets.mjs",
+    "predev": "npm run copy-assets",
+    "dev": "vite",
+    "prebuild": "npm run copy-assets",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource/atkinson-hyperlegible": "^5.3.0",
+    "@tensorflow/tfjs": "4.11.0",
+    "@tensorflow/tfjs-backend-wasm": "4.11.0",
+    "@upscalerjs/esrgan-medium": "1.0.0",
+    "@upscalerjs/esrgan-slim": "1.0.0",
+    "upscaler": "1.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}

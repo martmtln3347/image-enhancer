@@ -1,0 +1,296 @@
+/* =========================================================
+   Image Enhancer : table lumineuse + marques de recadrage au crayon gras
+   ========================================================= */
+
+:root {
+  /* Couleurs (mode clair) */
+  --bg: #eef1f3;          /* table lumineuse */
+  --surface: #ffffff;     /* papier photo */
+  --ink: #17212b;         /* texte principal */
+  --muted: #5e6b76;       /* texte secondaire */
+  --rule: #d5dbe0;        /* bordures */
+  --pencil: #c8322a;      /* crayon gras rouge, l'accent */
+  --pencil-ink: #ffffff;  /* texte sur fond rouge */
+  --ok: #1f7a4d;
+  --warn: #8a5a00;
+
+  /* Typo */
+  --font-display: 'Bricolage Grotesque Variable', 'Arial Narrow', system-ui, sans-serif;
+  --font-body: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Espacements */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --radius: 10px;
+
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15191d;
+    --surface: #1e2429;
+    --ink: #e8ecef;
+    --muted: #9aa6b0;
+    --rule: #333c44;
+    --pencil: #f0645a;
+    --pencil-ink: #15191d;
+    --ok: #5fcf95;
+    --warn: #e2b24f;
+  }
+}
+
+*, *::before, *::after { box-sizing: inherit; }
+
+html, body { margin: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+
+[hidden] { display: none !important; }
+
+:focus-visible {
+  outline: 3px solid var(--pencil);
+  outline-offset: 3px;
+}
+
+/* ---------- Mise en page ---------- */
+.page {
+  width: min(880px, 100% - 2 * var(--space-3));
+  margin-inline: auto;
+  padding-block: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* ---------- Intro ---------- */
+.intro__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 9vw, 5.25rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  margin: 0 0 var(--space-2);
+}
+
+.intro__lead {
+  max-width: 56ch;
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ---------- Cadre de dépôt (l'élément signature) ---------- */
+.frame {
+  position: relative;
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4) var(--space-3);
+  background: var(--surface);
+  border-radius: var(--radius);
+  transition: background-color 0.15s ease;
+}
+
+.frame--over { background: color-mix(in srgb, var(--pencil) 8%, var(--surface)); }
+.frame--filled { padding: var(--space-3); }
+
+/* Les 4 coins en crayon gras */
+.frame__mark {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 0 solid var(--pencil);
+  border-radius: 2px;
+  transition: transform 0.2s ease;
+}
+.frame__mark--tl { top: 12px;    left: 12px;  border-top-width: 4px;    border-left-width: 4px; }
+.frame__mark--tr { top: 12px;    right: 12px; border-top-width: 4px;    border-right-width: 4px; }
+.frame__mark--bl { bottom: 12px; left: 12px;  border-bottom-width: 4px; border-left-width: 4px; }
+.frame__mark--br { bottom: 12px; right: 12px; border-bottom-width: 4px; border-right-width: 4px; }
+
+/* Au survol en drag, les coins se resserrent : "je vais cadrer ça" */
+.frame--over .frame__mark--tl { transform: translate(8px, 8px); }
+.frame--over .frame__mark--tr { transform: translate(-8px, 8px); }
+.frame--over .frame__mark--bl { transform: translate(8px, -8px); }
+.frame--over .frame__mark--br { transform: translate(-8px, -8px); }
+
+.frame__empty { text-align: center; display: grid; gap: var(--space-1); justify-items: center; }
+
+.frame__title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.frame__hint { margin: 0 0 var(--space-2); color: var(--muted); }
+
+.frame__preview {
+  max-height: 60vh;
+  width: auto;
+  border-radius: 4px;
+}
+
+/* ---------- Boutons ---------- */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 1.4rem;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  font: 700 1rem/1 var(--font-display);
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+.button:active { transform: scale(0.97); }
+.button:disabled { opacity: 0.5; cursor: progress; }
+
+.button--primary { background: var(--pencil); color: var(--pencil-ink); }
+.button--primary:hover:not(:disabled) { background: color-mix(in srgb, var(--pencil) 85%, var(--ink)); }
+
+.button--ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
+.button--ghost:hover { border-color: var(--ink); }
+
+/* Le label qui contient l'input file doit afficher le focus clavier */
+label.button:focus-within { outline: 3px solid var(--pencil); outline-offset: 3px; }
+
+/* ---------- Message d'état ---------- */
+.message { margin: 0; min-height: 1.5em; color: var(--muted); }
+.message[data-type='error'] { color: var(--pencil); font-weight: 700; }
+.message[data-type='success'] { color: var(--ok); }
+.message[data-type='warning'] { color: var(--warn); }
+
+/* ---------- Réglages ---------- */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.choice { border: 0; padding: 0; margin: 0; display: flex; gap: 4px; }
+.choice legend { font-size: 0.9rem; color: var(--muted); margin-bottom: 6px; }
+
+.choice label { position: relative; }
+.choice input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.choice span {
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  border: 2px solid var(--rule);
+  border-radius: 8px;
+  font-weight: 700;
+  background: var(--surface);
+}
+.choice input:checked + span { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.choice input:focus-visible + span { outline: 3px solid var(--pencil); outline-offset: 2px; }
+.choice input:disabled + span { opacity: 0.5; }
+
+.controls__actions { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-left: auto; }
+
+.progress { flex-basis: 100%; }
+.progress__bar { height: 6px; border-radius: 3px; background: var(--rule); overflow: hidden; }
+.progress__bar span { display: block; height: 100%; width: 0; background: var(--pencil); transition: width 0.2s ease; }
+.progress__label { margin: var(--space-1) 0 0; font-size: 0.95rem; color: var(--muted); }
+
+/* ---------- Résultat + comparateur ---------- */
+.result { display: grid; gap: var(--space-2); }
+
+.result__title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  margin: var(--space-2) 0 0;
+}
+
+.compare {
+  --pos: 50%;
+  position: relative;
+  aspect-ratio: var(--ratio, 4 / 3);
+  max-height: 80vh;
+  margin-inline: auto;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--surface);
+  user-select: none;
+}
+
+.compare img,
+.compare__before {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* L'original est rogné à gauche du curseur */
+.compare__before { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+
+/* Ligne verticale au crayon */
+.compare::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 3px;
+  transform: translateX(-50%);
+  background: var(--pencil);
+  pointer-events: none;
+}
+
+/* Le range couvre toute l'image : on peut cliquer n'importe où */
+.compare__range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+}
+.compare:has(.compare__range:focus-visible) { outline: 3px solid var(--pencil); outline-offset: 3px; }
+
+.result__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.result__meta { margin: 0; color: var(--muted); }
+.result__method { font-size: 0.9rem; }
+
+/* ---------- Pied de page ---------- */
+.footnote {
+  max-width: 60ch;
+  font-size: 0.9rem;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+  padding-top: var(--space-2);
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 560px) {
+  .controls__actions { margin-left: 0; width: 100%; }
+  .controls__actions .button { flex: 1; }
+}
+
+/* ---------- Accessibilité : moins d'animations ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
+}
